@@ -1,0 +1,41 @@
+{
+  "name": "com.bluetooth.cordova.blegattproject",
+  "displayName": "BleGattProject",
+  "version": "1.0.0",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^10.1.2",
+    "cordova-ios": "^6.2.0",
+    "cordova-plugin-ble-central": "^1.4.4",
+    "cordova-plugin-device": "^2.1.0",
+    "cordova-plugin-file": "^7.0.0",
+    "cordova-plugin-media": "^6.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-ble-central": {
+        "BLUETOOTH_USAGE_DESCRIPTION": "Bluetooth is used to allow the exchange of data between phone/tablet and peripheral",
+        "ACCESS_BACKGROUND_LOCATION": "false",
+        "IOS_INIT_ON_LOAD": "true",
+        "BLUETOOTH_RESTORE_STATE": "false"
+      },
+      "cordova-plugin-device": {},
+      "cordova-plugin-media": {
+        "KEEP_AVAUDIOSESSION_ALWAYS_ACTIVE": "NO"
+      }
+    }
+  }
+}
