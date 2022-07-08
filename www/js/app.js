@@ -17,13 +17,14 @@ var cb_sharing=false;
 var cb_temperature=false;
 var rectangle;
 var alarm_sound_path="sounds/alarm.wav";
+var meshIDService ="00ff"; 
 
 var app = {};
 var device_addresses = [];
 var selected_device_address;
 
 app.device = {};
-app.device.ADV_NAME = 'BDSK'
+app.device.ADV_NAME = "ESP_GATTS_DEMO";
 
 app.device.IMMEDIATE_ALERT_SERVICE = '1802';
 app.device.LINK_LOSS_SERVICE       = '1803';
@@ -46,7 +47,7 @@ app.startScan = function()
 
     //TODO create onDeviceFound function
     function onDeviceFound(peripheral){
-          console.log("找到设备："+JSON.stringify(peripheral));
+          console.log("找到设备："+peripheral.name);
         if(app.isMyDevice(peripheral.name)){
             found_my_device = true;
             app.showDiscoveredDevice(peripheral.id,peripheral.name);
@@ -74,7 +75,11 @@ app.isMyDevice = function(device_name)
 {
     console.log("isMyDevice("+device_name+")");
     //TODO implement device name matching
-    return true;
+    if(device_name == null|| device_name == undefined)
+    {return false;}
+    console.log('设备名：'+device_name);
+    //app的过滤机制由这里实现
+    return (device_name == app.device.ADV_NAME);
 };
 
 app.setAlertLevel = function(level) {
@@ -123,12 +128,49 @@ app.stopRssiPolling = function() {
 app.toggleConnectionState = function() {
     console.log("toggleConnectionState("+selected_device_address+") : connected="+connected);
     //TODO implement code to toggle between connected and disconnected states
+    if (!connected) {
+        app.connectToDevice(selected_device_address);
+        } else {
+        // We’ll add this code later!
+        }
+
 };
 
 app.connectToDevice = function(device_address)
 {
 	console.log('connectToDevice: Connecting to '+device_address);
-    //TODO connect to the BDSK device and handle failures to connect and unexpected disconnections
+    //连接成功的操作
+    function onConnected(peripheral)
+    {
+       console.log("连接到设备——>已连接");
+       connected = true;
+       //检查我们需要的服务
+       if(app.hasService(peripheral,meshIDService)){
+        app.setControlsConnectedState();
+        showInfo("已连接",0);
+        alert("已连接");
+       }else{
+        showInfo("错误，缺少我们需要的GATT服务",2);
+        ble.disconnect(
+            selected_device_address,
+            function(){
+                console.log("设备断开连接成功");
+                showInfo("连接已断开");
+            },
+            function(error){
+              console.log("连接到设备失败"+error);
+              alert("错误：连接失败");
+              showInfo("错误：连接失败",2);  
+            }
+        )
+       }
+
+    }
+    //意外或者连接失败的操作
+    function onDisconnected(peripheral)
+    {
+    }
+   ble.connect(device_address, onConnected, onDisconnected);
 
 };
 
