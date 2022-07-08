@@ -27,10 +27,7 @@
     ],
     "plugins": {
       "cordova-plugin-ble-central": {
-        "BLUETOOTH_USAGE_DESCRIPTION": "Bluetooth is used to allow the exchange of data between phone/tablet and peripheral",
-        "ACCESS_BACKGROUND_LOCATION": "false",
-        "IOS_INIT_ON_LOAD": "true",
-        "BLUETOOTH_RESTORE_STATE": "false"
+        "ACCESS_BACKGROUND_LOCATION": "true"
       },
       "cordova-plugin-device": {},
       "cordova-plugin-media": {
