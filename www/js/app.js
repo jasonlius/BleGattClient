@@ -23,7 +23,7 @@ var device_addresses = [];
 var selected_device_address;
 
 app.device = {};
-app.device.ADV_NAME              = 'BDSK'
+app.device.ADV_NAME = 'BDSK'
 
 app.device.IMMEDIATE_ALERT_SERVICE = '1802';
 app.device.LINK_LOSS_SERVICE       = '1803';
@@ -45,12 +45,29 @@ app.startScan = function()
     console.log("startScan");
 
     //TODO create onDeviceFound function
+    function onDeviceFound(peripheral){
+          console.log("找到设备："+JSON.stringify(peripheral));
+        if(app.isMyDevice(peripheral.name)){
+            found_my_device = true;
+            app.showDiscoveredDevice(peripheral.id,peripheral.name);
 
+        }
+
+    }
     //TODO create scanFailure function
-
+    function scanFailure(reason) {
+    alert("扫描失败: "+JSON.stringify(reason));
+    }
     //TODO start scanning for devices for 5 seconds
+    ble.scan([], 5, onDeviceFound, scanFailure); 
+    showMessage("扫描中....");
 
     //TODO check outcome of scanning after 5 seconds have elapsed using a timer
+    setTimeout(function(){
+        showMessage("");
+        if(!found_my_device)
+        alert("没有发现我的设备！");
+    },5000);
 };
 
 app.isMyDevice = function(device_name)

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no">
     <title>Bluetooth SIG</title>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -52,13 +52,13 @@ function setDivVisibility() {
 </head>
 
 <body onload="initSettings();">
-
     <!-- Scanning and Device List -->
     <div id="device_list" class="screen">
-        <h2>Bluetooth LE Developer Study Guide</h2>
+       
+        <h2> 翔哥的蓝牙LE客户端 </h2>
         <table>
             <tr>
-                <td><button id="find" class="wide_button" onclick="app.findDevices()">Scan</button></td>
+                <td><button id="find" class="wide_button" onclick="app.findDevices()">扫描设备</button></td>
             </tr>
         </table>
 
@@ -69,7 +69,8 @@ function setDivVisibility() {
 
     <!-- main Page -->
     <div id="main_page" class="full_screen" hidden="true">
-        <h2>Bluetooth LE Developer Study Guide</h2>
+     
+        <h2>翔哥的蓝牙LE客户端</h2>
         <button class="wide_button_slim" onclick="app.exitMain()">Back</button>
         <div class="centred" id="device_details"></div>
         <div class="rssi" id="rssi">&nbsp;</div>
