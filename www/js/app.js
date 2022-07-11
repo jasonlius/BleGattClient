@@ -7,7 +7,7 @@ var odd = true;
 var info_hidden = true;
 var alert_level=0;
 var rssi;
-var proximity_band=3;
+var proximity_band=3;       
 var connection_timer;
 var rssi_timer;
 var btn_low;
@@ -83,9 +83,25 @@ app.isMyDevice = function(device_name)
 };
 
 app.setAlertLevel = function(level) {
-    console.log("setAlertLevel("+level+")");
     //TODO implement function which writes to the Alert Level characteristic
     // in the Link Loss service
+    console.log("设置警报等级("+level+")");
+    var alert_level_bytes = [0x00];
+    alert_level_bytes[0] = level;
+    var alert_level_data = new Uint8Array(alert_level_bytes)
+    ble.write(
+    selected_device_address, 
+    app.device.LINK_LOSS_SERVICE, 
+    app.device.ALERT_LEVEL_CHARACTERISTIC, 
+    alert_level_data.buffer, 
+    function() {
+    console.log("警报等级写入成功！");
+    alert_level = level;
+    app.setAlertLevelSelected();
+    },
+    function(e) {
+    console.log("警报等级写入错误: "+e);
+    });
 };
 
 app.setTemperatureMonitoring = function() {
@@ -104,11 +120,6 @@ app.setSharing = function() {
     }
 };
 
-app.makeNoise = function() {
-    console.log("makeNoise");
-    //TODO implement function which writes to the Alert Level characteristic
-    // in the Immediate Alert service
-};
 
 app.shareProximityData = function(proximity_band, rssi) {
     console.log("shareProximityData("+proximity_band+","+rssi+")");
