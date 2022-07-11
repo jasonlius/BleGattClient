@@ -78,8 +78,8 @@ app.isMyDevice = function(device_name)
     if(device_name == null|| device_name == undefined)
     {return false;}
     console.log('设备名：'+device_name);
-    //app的过滤机制由这里实现
-    return (device_name == app.device.ADV_NAME);
+    //蓝牙的过滤机制由这里实现
+    return (device_name == app.device.ADV_NAME || device_name == "BDSK");
 };
 
 app.setAlertLevel = function(level) {
@@ -131,7 +131,20 @@ app.toggleConnectionState = function() {
     if (!connected) {
         app.connectToDevice(selected_device_address);
         } else {
-        // We’ll add this code later!
+            console.log("断开连接中");
+            ble.disconnect(
+            selected_device_address,
+            function() {
+            console.log("改变连接状态: 断开连接状态OK");
+            showInfo("已断开");
+            connected = false;
+            app.setControlsDisconnectedState();
+            }, 
+            function(error) {
+            console.log("改变连接状态:断开连接失败: "+error);
+            alert("断连失败");
+            showInfo("错误：未能断连",2);
+            });
         }
 
 };
@@ -145,8 +158,9 @@ app.connectToDevice = function(device_address)
        console.log("连接到设备——>已连接");
        connected = true;
        //检查我们需要的服务
-       if(app.hasService(peripheral,meshIDService)){
+       if(app.hasService(peripheral,meshIDService) ||app.hasService(peripheral,app.device.IMMEDIATE_ALERT_SERVICE)){
         app.setControlsConnectedState();
+        app.establishCurrentAlertLevel();
         showInfo("已连接",0);
         alert("已连接");
        }else{
@@ -169,18 +183,60 @@ app.connectToDevice = function(device_address)
     //意外或者连接失败的操作
     function onDisconnected(peripheral)
     {
+        console.log("连接到设备——>关闭连接");
+
+        if (!connected) {
+            // we tried to connect and failed
+            console.log('连接到设备：错误！连接失败。');
+            console.log(JSON.stringify(peripheral));
+            showInfo("连接到设备：未连接",2);
+            alert("错误：无法连接到所选设备");
+            } else {
+            // we were already connected and disconnection was unexpected
+            showInfo("错误：未知状态的断开",2);
+            }
+            connected = false;
+            app.setControlsDisconnectedState();
     }
    ble.connect(device_address, onConnected, onDisconnected);
 
 };
 
 app.establishCurrentAlertLevel = function() {
-    console.log("establishCurrentAlertLevel");
+    console.log("获取当前的警报等级。");
     //TODO determine the Link Loss Alert Level that the BDSK device is currently set to
+    ble.read(selected_device_address, app.device.LINK_LOSS_SERVICE, 
+        app.device.ALERT_LEVEL_CHARACTERISTIC,function(data){
+            console.log("读取当前的警报等级！");
+            var alert_level_data = new Uint8Array(data);
+            if (alert_level_data.length > 0) {
+                console.log("警报等级="+alert_level_data[0]);
+                alert_level = alert_level_data[0];
+                app.setAlertLevelSelected();
+            }
+        },
+        function(err) {
+            console.log("错误，读取警报等级失败: "+err);
+            })
 }
 
 app.exitMain = function() {
-    app.showDeviceList();
+    if (connected) {
+        showInfo("断开连接中");
+        ble.disconnect(
+        selected_device_address,
+        function() {
+        console.log("断连成功");
+        app.showDeviceList();
+        }, 
+        function(error) {
+        console.log("断连失败: "+error);
+        alert("未能断开连接");
+        app.showDeviceList();
+        });
+        } else {
+        app.showDeviceList();
+        }
 };
 
 app.showDiscoveredDevice = function(address, name) {
