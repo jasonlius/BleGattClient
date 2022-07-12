@@ -104,37 +104,6 @@ app.setAlertLevel = function(level) {
     });
 };
 
-app.setTemperatureMonitoring = function() {
-    console.log("setTemperatureMonitoring");
-    monitoring_temperature = cb_temperature.checked;
-    console.log("monitoring_temperature="+monitoring_temperature);
-};
-
-app.setSharing = function() {
-    console.log("setSharing");
-    sharing = cb_sharing.checked;
-    console.log("sharing="+sharing);
-    if (!sharing) {
-        // this will clear the LCD / console of proximity info and switch off all LEDs
-        app.shareProximityData(0,0);
-    }
-};
-
-
-app.shareProximityData = function(proximity_band, rssi) {
-    console.log("shareProximityData("+proximity_band+","+rssi+")");
-    //TODO implement function which writes to the Client Proximity characteristic
-    // in the Proximity Monitoring service
-};
-
-app.startRssiPolling = function() {
-    console.log("startRssiPolling");
-    //TODO implement RSSI polling
-};
-
-app.stopRssiPolling = function() {
-    clearTimeout(rssi_timer);
-};
 
 app.toggleConnectionState = function() {
     console.log("toggleConnectionState("+selected_device_address+") : connected="+connected);
@@ -302,9 +271,6 @@ app.showMain = function(address) {
     btn_low = document.getElementById("btn_low");
     btn_mid = document.getElementById("btn_mid");
     btn_high = document.getElementById("btn_high");
-    cb_sharing = document.getElementById('sharing');
-    cb_temperature = document.getElementById('temp_monitoring');
-    rectangle = document.getElementById("proximity_rectangle");
     document.getElementById('device_details').innerHTML = "Device:"+address+"";
     app.setControlsDisconnectedState();
     showInfo("Ready");
@@ -380,9 +346,7 @@ app.buttonIsDisabled = function(btn_id) {
 
 app.setControlsConnectedState = function() {
     console.log("setControlsConnectedState");
-    app.setButtonText("btn_connect","DISCONNECT");
-    document.getElementById('sharing').disabled = false;
-    document.getElementById('temp_monitoring').disabled = false;
+    app.setButtonText("btn_connect","断连");
     app.enableButton('btn_low');
     app.enableButton('btn_mid');
     app.enableButton('btn_high');
@@ -391,14 +355,11 @@ app.setControlsConnectedState = function() {
 
 app.setControlsDisconnectedState = function() {
     console.log("setControlsDisconnectedState");
-    app.setButtonText("btn_connect","CONNECT");
-    document.getElementById('sharing').disabled = true;
-    document.getElementById('temp_monitoring').disabled = true;
+    app.setButtonText("btn_connect","连接");
     app.disableButton('btn_low');
     app.disableButton('btn_mid');
     app.disableButton('btn_high');
     app.disableButton('btn_noise');
-    rectangle.style.backgroundColor = "#000000";
 };
 
 // Initialize the app.
