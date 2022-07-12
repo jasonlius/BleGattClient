@@ -311,7 +311,7 @@ app.setButtonText = function(btn_id,text) {
 
 app.disableButton = function(btn_id) {
     var btn = document.getElementById(btn_id);
-    btn.style.color = "gray";
+ 
 };
 
 app.enableButton = function(btn_id) {
@@ -359,7 +359,6 @@ app.setControlsDisconnectedState = function() {
     app.disableButton('btn_low');
     app.disableButton('btn_mid');
     app.disableButton('btn_high');
-    app.disableButton('btn_noise');
 };
 
 // Initialize the app.
