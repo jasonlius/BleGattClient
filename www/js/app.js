@@ -305,7 +305,7 @@ app.showMain = function(address) {
     cb_sharing = document.getElementById('sharing');
     cb_temperature = document.getElementById('temp_monitoring');
     rectangle = document.getElementById("proximity_rectangle");
-    document.getElementById('device_details').innerHTML = "Device: BDSK["+address+"]";
+    document.getElementById('device_details').innerHTML = "Device:"+address+"";
     app.setControlsDisconnectedState();
     showInfo("Ready");
     setDivVisibility();
