@@ -88,6 +88,9 @@ app.setAlertLevel = function(level) {
     console.log("设置警报等级("+level+")");
     var alert_level_bytes = [0x00];
     alert_level_bytes[0] = level;
+    const val = document.getElementById("inputField").value;
+    console.log("inputField: "+val+"")
+;
     var alert_level_data = new Uint8Array(alert_level_bytes)
     ble.write(
     selected_device_address, 
