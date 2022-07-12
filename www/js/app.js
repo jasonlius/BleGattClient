@@ -350,7 +350,6 @@ app.setControlsConnectedState = function() {
     app.enableButton('btn_low');
     app.enableButton('btn_mid');
     app.enableButton('btn_high');
-    app.enableButton('btn_noise');
 };
 
 app.setControlsDisconnectedState = function() {
