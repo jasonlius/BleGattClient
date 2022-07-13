@@ -137,7 +137,7 @@ app.connectToDevice = function(device_address)
        //检查我们需要的服务
        if(app.hasService(peripheral,meshIDService) ||app.hasService(peripheral,app.device.IMMEDIATE_ALERT_SERVICE)){
         app.setControlsConnectedState();
-        app.establishCurrentAlertLevel();
+        app.establishCurrentMeshId();
         showInfo("已连接",0);
         alert("已连接");
        }else{
@@ -179,20 +179,20 @@ app.connectToDevice = function(device_address)
 
 };
 
-app.establishCurrentAlertLevel = function() {
-    console.log("获取当前的警报等级。");
-    //TODO determine the Link Loss Alert Level that the BDSK device is currently set to
+app.establishCurrentMeshId = function() {
+    console.log("获取当前设备的MeshID。");
+    //determine the Mesh ID that the BDSK device is currently set to
     ble.read(selected_device_address, app.device.LINK_LOSS_SERVICE, 
         app.device.ALERT_LEVEL_CHARACTERISTIC,function(data){
-            console.log("读取当前的警报等级！");
-            var alert_level_data = new Uint8Array(data);
-            if (alert_level_data.length > 0) {
-                console.log("警报等级="+alert_level_data);
-                document.getElementById("meshIdValue").innerHTML.text = alert_level_data;
+            console.log("读取当前的MeshID！");
+            var meshIdData = new Uint8Array(data);
+            if (meshIdData.length > 0) {
+                console.log("Mesh ID = "+meshIdData);
+                document.getElementById("meshIdValue").innerHTML.text = meshIdData;
             }
         },
         function(err) {
-            console.log("错误，读取警报等级失败: "+err);
+            console.log("错误，读取Mesh ID  : "+err);
             })
 }
 
