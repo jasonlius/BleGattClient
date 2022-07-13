@@ -82,24 +82,22 @@ app.isMyDevice = function(device_name)
     return (device_name == app.device.ADV_NAME || device_name == "BDSK");
 };
 
-app.setAlertLevel = function(level) {
-    //TODO implement function which writes to the Alert Level characteristic
+app.setMeshId = function(id) {
+    //implement function which writes to the mesh id characteristic
     // in the Link Loss service
-    console.log("设置警报等级("+level+")");
-    let alert_level_bytes = level;
-    const val = document.getElementById("inputField").value;
-    console.log("inputField: "+val+"");
-    var alert_level_data = new Uint8Array(alert_level_bytes)
+    console.log("设置meshID为("+id+")");
+    let id_bytes = id;
+    id_data = new Uint8Array(id_bytes)
     ble.write(
     selected_device_address, 
     app.device.LINK_LOSS_SERVICE, 
     app.device.ALERT_LEVEL_CHARACTERISTIC, 
-    alert_level_data.buffer, 
+    id_data.buffer, 
     function() {
-    console.log("警报等级写入成功！");
+    console.log("MeshID写入成功！");
     },
     function(e) {
-    console.log("警报等级写入错误: "+e);
+    console.log("MeshID写入错误: "+e);
     });
 };
 
