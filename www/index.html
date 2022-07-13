@@ -73,19 +73,17 @@
             <div class="centred" id="device_details"></div>
             <div class="rssi" id="rssi">&nbsp;</div>
             <div id="proximity_rectangle" class="proximity_rectangle"></div>
-            <table>
+            
+            <div >
+                <input class="large_cb" type="text" value="" id="inputField"  placeholder="请输入需要修改的meshID">
+            </div>
+            <table id="main_buttons">
                 <tr>
-                    <td class="third"><button id="btn_low" class="wide_button" >LOW</button></td>
-                    <td class="third"><button id="btn_mid" class="wide_button" onclick="app.setAlertLevel(1)">MID</button></td>
-                    <td class="third"><button id="btn_high" class="wide_button" onclick="app.setAlertLevel(2)">HIGH</button></td>
+                    <td  class="half"><button id="btn_read" class="wide_button" onclick="app.establishCurrentAlertLevel()">读取MeshID</button></td>
+                    <td class="half"><button class="wide_button" type="button" id="Btn_input" onclick="app.setAlertLevel(document.getElementById('inputField').value)">修改MeshID</button></td>
                 </tr>
             </table>
-            <div >
-                <input class="large_cb" type="text" value="" id="inputField" placeholder="请输入需要修改的meshID">
-                <button class="wide_button" type="button" id="Btn_input" onclick="app.setAlertLevel(parseInt(document.getElementById('inputField').value),16)">修改 </button>
-            </div>
-
-            <div class="full_centred" id="temperature">not available</div>
+            <div class="full_centred" id="meshIdValue">not available</div>
             <div class="footer">
                 <div id="info" class="full_centred"></div>
                 <div class="full_centred"><button id="btn_connect" class="wide_button" onclick="app.toggleConnectionState()">CONNECT</button></div>

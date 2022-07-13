@@ -86,11 +86,9 @@ app.setAlertLevel = function(level) {
     //TODO implement function which writes to the Alert Level characteristic
     // in the Link Loss service
     console.log("设置警报等级("+level+")");
-    var alert_level_bytes = [0x00];
-    alert_level_bytes[0] = level;
+    let alert_level_bytes = level;
     const val = document.getElementById("inputField").value;
-    console.log("inputField: "+val+"")
-;
+    console.log("inputField: "+val+"");
     var alert_level_data = new Uint8Array(alert_level_bytes)
     ble.write(
     selected_device_address, 
@@ -99,8 +97,6 @@ app.setAlertLevel = function(level) {
     alert_level_data.buffer, 
     function() {
     console.log("警报等级写入成功！");
-    alert_level = level;
-    app.setAlertLevelSelected();
     },
     function(e) {
     console.log("警报等级写入错误: "+e);
@@ -193,9 +189,8 @@ app.establishCurrentAlertLevel = function() {
             console.log("读取当前的警报等级！");
             var alert_level_data = new Uint8Array(data);
             if (alert_level_data.length > 0) {
-                console.log("警报等级="+alert_level_data[0]);
-                alert_level = alert_level_data[0];
-                app.setAlertLevelSelected();
+                console.log("警报等级="+alert_level_data);
+                document.getElementById("meshIdValue").innerHTML.text = alert_level_data;
             }
         },
         function(err) {
@@ -317,30 +312,7 @@ app.disableButton = function(btn_id) {
  
 };
 
-app.enableButton = function(btn_id) {
-    var btn = document.getElementById(btn_id);
-    btn.style.color = "white";
-}
 
-app.setAlertLevelSelected = function() {
-    switch (alert_level) {
-        case 0:
-          btn_low.style.color="#FF0000";
-          btn_mid.style.color="#FFFFFF";
-          btn_high.style.color="#FFFFFF";
-          break;
-        case 1:
-          btn_low.style.color="#FFFFFF";
-          btn_mid.style.color="#FF0000";
-          btn_high.style.color="#FFFFFF";
-          break;
-        case 2:
-          btn_low.style.color="#FFFFFF";
-          btn_mid.style.color="#FFFFFF";
-          btn_high.style.color="#FF0000";
-          break;
-    };
-};
 
 app.buttonIsDisabled = function(btn_id) {
     var btn = document.getElementById(btn_id);
@@ -350,9 +322,6 @@ app.buttonIsDisabled = function(btn_id) {
 app.setControlsConnectedState = function() {
     console.log("setControlsConnectedState");
     app.setButtonText("btn_connect","断连");
-    app.enableButton('btn_low');
-    app.enableButton('btn_mid');
-    app.enableButton('btn_high');
 };
 
 app.setControlsDisconnectedState = function() {
