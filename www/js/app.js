@@ -86,13 +86,14 @@ app.setMeshId = function(id) {
     //implement function which writes to the mesh id characteristic
     // in the Link Loss service
     console.log("设置meshID为("+id+")");
-    let id_bytes = id;
-    id_data = new Uint8Array(id_bytes)
+
+    let id_data =app.hexstring2ArrayBuffer(id);
+    console.log("meshID为("+app.hexstring2ArrayBuffer(id_data)+")");
     ble.write(
     selected_device_address, 
     app.device.LINK_LOSS_SERVICE, 
     app.device.ALERT_LEVEL_CHARACTERISTIC, 
-    id_data.buffer, 
+    id_data, 
     function() {
     console.log("MeshID写入成功！");
     },
@@ -329,6 +330,19 @@ app.setControlsDisconnectedState = function() {
     app.disableButton('btn_mid');
     app.disableButton('btn_high');
 };
+
+// 字符串转ArrayBuffer
+app.hexstring2ArrayBuffer= function(hexString) {
+    let val = String(hexString);
+    return new Uint8Array(val.match(/[\da-f]{2}/gi).map(function (h) {
+        return parseInt(h, 16)
+      })).buffer;
+}
+
+    // ArrayBuffer转字符串
+ app.arrayBuffer2String = function(buffer) {
+        return String.fromCharCode.apply(null, new Uint8Array(buffer));
+      }
 
 // Initialize the app.
 app.initialize();
