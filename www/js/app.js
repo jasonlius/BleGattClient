@@ -1,25 +1,12 @@
 var found_my_device = false;
 var connected = false;
 var disconnect_requested = false;
-var sharing = false;
-var monitoring_temperature = false;
 var odd = true;
 var info_hidden = true;
-var alert_level=0;
-var rssi;
-var proximity_band=3;       
+var alert_level=0;    
 var connection_timer;
-var rssi_timer;
-var btn_low;
-var btn_mid;
-var btn_high;
-var cb_sharing=false;
-var cb_temperature=false;
-var rectangle;
-var alarm_sound_path="sounds/alarm.wav";
 var meshIDService ="00ff"; 
 var meshIDChar ="ff01"; 
-
 
 var app = {};
 var device_addresses = [];
@@ -27,16 +14,8 @@ var selected_device_address;
 
 app.device = {};
 app.device.ADV_NAME = "ESP_GATTS_DEMO";
-
-app.device.IMMEDIATE_ALERT_SERVICE = '1802';
 app.device.LINK_LOSS_SERVICE       = '1803';
-app.device.TX_POWER_SERVICE        = '1804';
-app.device.PROXIMITY_MONITORING_SERVICE = '3e099910-293f-11e4-93bd-afd0fe6d1dfd';
-app.device.HEALTH_THERMOMETER_SERVICE = '1809';
-
 app.device.ALERT_LEVEL_CHARACTERISTIC   = '2a06';
-app.device.TEMPERATURE_MEASUREMENT_CHARACTERISTIC   = '2a1C';
-app.device.CLIENT_PROXIMITY_CHARACTERISTIC = '3e099911-293f-11e4-93bd-afd0fe6d1dfd';
 
 app.findDevices = function() {
     app.clearDeviceList();
@@ -138,7 +117,7 @@ app.connectToDevice = function(device_address)
        console.log("连接到设备——>已连接");
        connected = true;
        //检查我们需要的服务
-       if(app.hasService(peripheral,meshIDService) ||app.hasService(peripheral,app.device.IMMEDIATE_ALERT_SERVICE)){
+       if(app.hasService(peripheral,meshIDService) ||app.hasService(peripheral,app.device.LINK_LOSS_SERVICE)){
         app.setControlsConnectedState();
         app.establishCurrentMeshId();
         showInfo("已连接",0);
@@ -310,7 +289,6 @@ app.setButtonText = function(btn_id,text) {
 
 app.disableButton = function(btn_id) {
     var btn = document.getElementById(btn_id);
- 
 };
 
 
@@ -343,11 +321,11 @@ app.hexstring2ArrayBuffer= function(hexString) {
 
 // ArrayBuffer转hex字符串
  app.arrayBuffer2String = function(buffer) {
-     let Val = ([...new Uint8Array (buffer)]
+    let Val = ([...new Uint8Array (buffer)]
     .map (b => b.toString (16).padStart (2, "0"))
     .join (""));
-      return Val;
-      }
+    return Val;
+}
 
-// Initialize the app.
+// 初始化app
 app.initialize();
