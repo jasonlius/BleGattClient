@@ -93,8 +93,8 @@ app.setMeshId = function(id) {
     console.log("meshID为("+app.arrayBuffer2String(id_data)+")");
     ble.write(
     selected_device_address, 
-    meshIDService, 
-    meshIDChar, 
+    app.device.LINK_LOSS_SERVICE, 
+    app.device.ALERT_LEVEL_CHARACTERISTIC, 
     id_data, 
     function() {
     console.log("MeshID写入成功！");
@@ -185,10 +185,10 @@ app.connectToDevice = function(device_address)
 app.establishCurrentMeshId = function() {
     console.log("获取当前设备的MeshID。");
     //determine the Mesh ID that the BDSK device is currently set to
-    ble.read(selected_device_address, meshIDService, 
-        meshIDChar,function(data){
+    ble.read(selected_device_address,app.device.LINK_LOSS_SERVICE, 
+        app.device.ALERT_LEVEL_CHARACTERISTIC,function(data){
             console.log("读取当前的MeshID！");
-            let meshIdData = String.fromCharCode.apply(null, new Uint8Array(data));
+            let meshIdData = app.arrayBuffer2String(data);
             if (meshIdData.length > 0) {
                 console.log("Mesh ID = "+meshIdData);
                 document.getElementById("meshIdValue").innerText = meshIdData;
@@ -341,9 +341,12 @@ app.hexstring2ArrayBuffer= function(hexString) {
       })).buffer;
 }
 
-    // ArrayBuffer转字符串
+// ArrayBuffer转hex字符串
  app.arrayBuffer2String = function(buffer) {
-        return String.fromCharCode.apply(null, new Uint8Array(buffer));
+     let Val = ([...new Uint8Array (buffer)]
+    .map (b => b.toString (16).padStart (2, "0"))
+    .join (""));
+      return Val;
       }
 
 // Initialize the app.
